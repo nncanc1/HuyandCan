@@ -68,21 +68,21 @@ export default class Home extends React.Component {
             </View>
             {this.state.status ? <Menu /> : <ListMenu />}
           </View> */}
-        {/* <Login navigate={navigate} /> */}
+        <Login navigate={navigate} />
         {/* <CountTetday/> */}
         {/* </ScrollView> */}
-        <View style={{justifyContent: 'flex-start'}}>
+        {/* <View style={{justifyContent: 'flex-start'}}>
           <Header />
         </View>
-        {/* <View style={{top:20, flex: 1, position: 'absolute'}}>
+        <View style={{top:20, flex: 1, position: 'absolute'}}>
           <Content />
-        </View> */}
+        </View>
         <View style={{flex: 1}}>
           <ContentNotification />
         </View>
         <View style={{justifyContent: 'flex-end'}}>
           <Footer />
-        </View>
+        </View> */}
       </View>
     );
   }

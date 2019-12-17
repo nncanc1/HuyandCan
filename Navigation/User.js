@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  AsyncStorage,
+} from 'react-native';
 import Login from '../components/Login.js';
 import Data from '../Navigation/data.json';
 export default class User extends React.Component {
@@ -10,18 +16,25 @@ export default class User extends React.Component {
       password: '',
     };
   }
+
   componentWillMount() {
-    const {navigation} = this.props;
-    const a = navigation.getParam('_id');
+    // const {navigation} = this.props;
+    // const a = navigation.getParam('_id');
+    // const user = Data.find(item => item.id == a);
+    // this.setState(user);
+    this._loadData();
+  }
+  _loadData = async () => {
+    const a = await AsyncStorage.getItem('isLogin');
+    // this.props.navigation.navigate(isLoggedin ? 'Login' : 'User');
     const user = Data.find(item => item.id == a);
     this.setState(user);
-    // console.log(user)
-  }
+  };
+  _logout = async () => {
+    await AsyncStorage.removeItem('isLogin');
+    this.props.navigation.navigate('Login');
+  };
 
-  // componentDidMount(){
-  //     console.log ("DID")
-
-  // }
   render() {
     // console.log ("RENDER")
 
@@ -31,10 +44,8 @@ export default class User extends React.Component {
         <Text style={CSS.title}>{this.state.username}</Text>
         <Text style={CSS.title}>{this.state.password}</Text>
 
-        <TouchableOpacity
-          style={CSS.CustomButton}
-          onPress={() => this.props.navigation.navigate('Login')}>
-          <Text style={CSS.title}>Trở về</Text>
+        <TouchableOpacity style={CSS.CustomButton} onPress={this._logout}>
+          <Text style={CSS.title}>Đăng xuất</Text>
         </TouchableOpacity>
       </View>
     );
@@ -42,7 +53,7 @@ export default class User extends React.Component {
 }
 var CSS = StyleSheet.create({
   container: {
-    backgroundColor: 'red',
+    backgroundColor: '#00bfff',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

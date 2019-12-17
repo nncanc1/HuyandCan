@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  AsyncStorage,
 } from 'react-native';
 import {getValues} from 'jest-validate/build/condition';
 import {valueToNode} from '@babel/types';
@@ -25,14 +26,7 @@ export default class Login extends React.Component {
       password: '',
     };
   }
-  onEnterText = inputTextValue => {
-    if (inputTextValue.trim() != 0) {
-      this.setState({inputTextValue: inputTextValue, ErrorStatus: true});
-    } else {
-      this.setState({inputTextValue: inputTextValue, ErrorStatus: false});
-    }
-  };
-  buttonClickListener = () => {
+  _login = async () => {
     const user = Data.find(
       item =>
         item.username === this.state.username &&
@@ -41,16 +35,44 @@ export default class Login extends React.Component {
     if ((this.state.username === '' && this.state.password === '') || !user) {
       this.setState({ErrorStatus: false});
     } else {
-      this.props.navigate('User', {_id: user.id});
-      // this.props.navigate('User')
-      // navigation('User')
-      // this.setState({ErrorStatus: true});
-      // alert('Ban co muon dang nhap?');
+      await AsyncStorage.setItem('isLogin', '1');
+      this.props.navigation.navigate('User');
     }
   };
-  onFocusChange = () => {
-    this.setState({isFocused: true});
+  componentWillMount() {
+    this._isLogged();
+  }
+  _isLogged = async () => {
+    const isLoggedin = await AsyncStorage.getItem('isLogin');
+    console.log(isLoggedin);
+    this.props.navigate(isLoggedin !== '1' ? 'Login' : 'User');
   };
+  onEnterText = inputTextValue => {
+    if (inputTextValue.trim() !== 0) {
+      this.setState({inputTextValue: inputTextValue, ErrorStatus: true});
+    } else {
+      this.setState({inputTextValue: inputTextValue, ErrorStatus: false});
+    }
+  };
+  // buttonClickListener = () => {
+  //   const user = Data.find(
+  //     item =>
+  //       item.username === this.state.username &&
+  //       item.password === this.state.password,
+  //   );
+  //   if ((this.state.username === '' && this.state.password === '') || !user) {
+  //     this.setState({ErrorStatus: false});
+  //   } else {
+  //     this.props.navigate('User', {_id: user.id});
+  //     // this.props.navigate('User')
+  //     // navigation('User')
+  //     // this.setState({ErrorStatus: true});
+  //     // alert('Ban co muon dang nhap?');
+  //   }
+  // };
+  // onFocusChange = () => {
+  //   this.setState({isFocused: true});
+  // };
   render() {
     return (
       <View>
@@ -82,9 +104,7 @@ export default class Login extends React.Component {
             // style={this.state.isFocused ? CSS.font1 : CSS.font2}
             underlineColorAndroid={this.state.ErrorStatus ? 'blue' : 'red'}
           />
-          <TouchableOpacity
-            style={CSS.button}
-            onPress={this.buttonClickListener}>
+          <TouchableOpacity style={CSS.button} onPress={this._login}>
             <Text style={CSS.button1}>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
