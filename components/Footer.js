@@ -9,7 +9,6 @@ export default class Footer extends React.Component {
 var CSS = StyleSheet.create({
   Footer: {
     backgroundColor: 'red',
-    width: width,
     height: height / 12,
   },
 });
